@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hex Sweets</title>
+    <script src="hexsweeter v1.2.js"></script>
+    <link rel="stylesheet" href="style.css"/>
+    <link rel="icon" href="planet.png"/>
+    <canvas id="Matrix"></canvas>
+    <link rel="icon" href="planet.png"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+    <button id="toggleMatrix">Toggle Rain</button>
+
+    <style>
+        :root {
+            --light-background: #99b998;
+            --light-text: #ffffff;
+            --light-primary: #00ff41;
+            --light-secondary: #008c30;
+            --light-border: #5a875a;
+            --light-shadow: rgba(0, 255, 65, 0.2);
+
+            --dark-background: #000;
+            --dark-text: #00ff00;
+            --dark-primary: #00b437;
+            --dark-secondary: #006825;
+            --dark-border: #214e21;
+            --dark-shadow: rgba(0, 255, 65, 0.2);
+        }
+
+
+        body[data-theme='light'] {
+            background-color: var(--light-background);
+            color: var(--light-text);
+        }
+
+        body[data-theme='dark'] {
+            background-color: var(--dark-background);
+            color: var(--dark-text);
+        }
+
+        body, h1, p, button, textarea, label {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 400;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--light-primary);
+            margin-bottom: 24px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            background-color: var(--light-primary);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px var(--light-shadow);
+            justify-content: center; 
+        }
+
+        .navbar > div {
+            display: flex;
+        }
+
+        .navbar a {
+            flex: 1;
+            text-align: center;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: white;
+            border-radius: 4px;
+            margin: 0 8px;
+            transition: background-color 0.2s;
+        }
+
+        .navbar a:hover, .navbar a.active {
+            background-color: var(--light-text);
+            color: var(--light-primary);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--light-border);
+            box-shadow: inset 0 2px 4px var(--light-shadow);
+            margin-bottom: 16px;
+            resize: vertical; 
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--light-primary);
+            color: white;
+            cursor: pointer;
+            margin-right: 12px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--light-secondary);
+            transform: scale(1.05);
+        }
+
+        #themeToggle {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            transition: color 0.3s;
+            position: fixed;
+            top: 24px;
+            right: 20px;
+            font-size: 24px;
+        }
+
+        #toggleMatrix {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            transition: color 0.3s;
+            position: fixed;
+            bottom: 22px;
+            right: 20px;
+
+        }
+
+        #themeToggle:hover {
+            color: var(--light-secondary);
+        }
+
+        body {
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .navbar, 
+        button, 
+        textarea {
+            transition: background-color 0.3s, border 0.3s, box-shadow 0.3s;
+        }
+
+        .navbar a, 
+        button:hover {
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        body[data-theme='dark'] #themeToggle {
+            color: var(--dark-primary);
+        }
+
+        body[data-theme='dark'] {
+            background-color: var(--dark-background);
+            color: var(--dark-text);
+        }
+
+        body[data-theme='dark'] h1 {
+            color: var(--dark-primary);
+        }
+
+        body[data-theme='dark'] .navbar {
+            background-color: var(--dark-primary);
+            box-shadow: 0 2px 4px var(--dark-shadow);
+        }
+
+        body[data-theme='dark'] .navbar a:hover, 
+        body[data-theme='dark'] .navbar a.active {
+            background-color: var(--dark-text);
+            color: var(--dark-primary);
+        }
+
+        body[data-theme='dark'] textarea {
+            border: 1px solid var(--dark-border);
+            box-shadow: inset 0 2px 4px var(--dark-shadow);
+        }
+
+        body[data-theme='dark'] button {
+            background-color: var(--dark-primary);
+        }
+
+        body[data-theme='dark'] button:hover {
+            background-color: var(--dark-secondary);
+        }
+
+    </style>
+    <body>
+        <script src="index.js"></script>
+        <canvas id="Matrix"></canvas>
+
+        <div class="navbar">
+            <div>
+                <a href="#" onclick="showSection('candify')">Candify</a>
+                <a href="#" onclick="showSection('asian')">Asianify</a>
+                <a href="#" onclick="showSection('docs')">Docs</a>
+                <button id="themeToggle" onclick="toggleTheme()">🌙</button>
+            </div>
+        </div>  
+        <div class="section" id="candify">
+            <h1>Candify Encoder & Decoder 🍬</h1>
+
+            <label for="inputTextCandify">Enter your text:</label>
+            <textarea id="inputTextCandify" rows="4" cols="50"></textarea><br><br>
+
+            <button onclick="performEncoding()">Encode</button>
+            <button onclick="performDecoding()">Decode</button><br><br>
+
+            <label for="outputTextCandify">Output:</label>
+            <textarea id="outputTextCandify" rows="4" cols="50" readonly></textarea>
+        </div>
+        <div class="section" id="asian">
+            <h1>Asian Encoder & Decoder</h1>
+
+            <label for="inputTextAsian">Enter your text:</label>
+            <textarea id="inputTextAsian" rows="4" cols="50"></textarea><br><br>
+
+            <button onclick="performEncodingAsian()">Asian Code</button>
+            <button onclick="performDecodingAsian()">De-Asian Code</button><br><br>
+
+            <label for="outputTextAsian">Output:</label>
+            <textarea id="outputTextAsian" rows="4" cols="50" readonly></textarea>
+        </div>
+        <div class="section" id="docs">
+            <div class="documentation">
+                <h1>Documentation: Candify & Asianify Encoder</h1>
+
+            <p>Welcome to the Candify Encoder documentation. Here's how you can start using the encoder:</p>
+
+            <h2>1. How to start encoding:</h2>
+            <div class="code-box">
+                <pre><code>&lt;script src="https://cdn.jsdelivr.net/gh/applexdlol/candy-asian@main/candy-asian-v1.js">&lt;/script></code></pre>
+            </div>
+
+            <h2>2. How to encode a string:</h2>
+            <div class="code-box">
+                <pre><code>
+//Candify Encoder
+var string="Hello World!";
+encode(string); 
+
+//Asianify Encoder
+var words = "Hello World!";
+asiancode(words);
+
+                </code></pre>
+            </div>
+
+            <h2>3. How to decode a string:</h2>
+            <div class="code-box">
+                <pre><code>
+//Candify Decoder
+decode("\\x43\\x4e\\x6c\\x4d\\x6f\\x67\\x6c\\x57\\x47\\x38\\x72\\x61\\x67\\x32\\x34\\x68\\x48\\x47\\x44\\x72\\x51\\x45\\x46\\x55\\x78\\x58\\x39\\x6d\\x44\\x74\\x31\\x56\\x36\\x33\\x30\\x57\\x64\\x34\\x45\\x6d\\x41\\x71\\x42\\x51\\x71\\x4a\\x55\\x64\\x7a\\x50\\x6c\\x72\\x51\\x62\\x53\\x4e\\x77\\x6a\\x55\\x79\\x6f\\x6b\\x78\\x37\\x4f\\x44\\x71\\x6e\\x33\\x39\\x75\\x33\\x78\\x58\\x39\\x6d\\x44\\x74\\x6c\\x57\\x47\\x38\\x72\\x61\\x7a\\x74\\x36\\x41\\x58\\x50\\x33\\x4e\\x64\\x41\\x6b\\x68");
+
+//Asianify Decoder
+deasiancode("ㄴㅇ매저등ㄴ者因圖果四光つはしとかハ木火土弓廿手あいてはんえシンエハクイぬちうすゆろ難金女日尸手菽權來少米主タテイラヌフ쵸ㅜㅐㅗㅊ수ㄱㄱ폴ㄴㅌㅅあいてはんえ者因圖果四光ㅂㅈㅂㄴㄴㄱ料歡期嗎木卜")
+
+                </code></pre>
+            </div>
+
+            <h2>4. How to run an encoded string:</h2>
+            <div class="code-box">
+                <pre><code>
+//Candify Execute Code
+var encodedString69 = "\\x30\\x68\\x32\\x4a\\x56\\x34\\x53\\x4e\\x77\\x6a\\x55\\x79\\x6f\\x6b\\x78\\x37\\x4f\\x44\\x55\\x42\\x6a\\x78\\x47\\x68\\x5a\\x4b\\x79\\x44\\x45\\x4d\\x53\\x4e\\x77\\x6a\\x55\\x79\\x6f\\x6b\\x78\\x37\\x4f\\x44\\x44\\x72\\x51\\x45\\x46\\x55\\x43\\x4e\\x6c\\x4d\\x6f\\x67\\x70\\x69\\x30\\x70\\x51\\x38\\x37\\x30\\x4f\\x78\\x34\\x75\\x44\\x72\\x51\\x45\\x46\\x55\\x7a\\x74\\x36\\x41\\x58\\x50\\x78\\x4f\\x58\\x6e\\x79\\x44\\x34\\x41\\x46\\x4b\\x73\\x54\\x34\\x41\\x46\\x4b\\x73\\x54\\x64\\x34\\x45\\x6d\\x41\\x71\\x39\\x69\\x56\\x56\\x71\\x4b\\x63\\x63\\x43\\x41\\x54\\x72\\x34\\x41\\x46\\x4b\\x73\\x54\\x78\\x58\\x39\\x6d\\x44\\x74\\x6c\\x57\\x47\\x38\\x72\\x61\\x49\\x7a\\x75\\x57\\x79\\x45\\x37\\x53\\x32\\x62\\x36\\x6a\\x64\\x34\\x45\\x6d\\x41\\x71\\x63\\x61\\x6f\\x57\\x50\\x77\\x68\\x4e\\x4f\\x53\\x57\\x36\\x37\\x53\\x32\\x62\\x36\\x6a\\x5a\\x4b\\x79\\x44\\x45\\x4d\\x32\\x61\\x64\\x6d\\x5a\\x70\\x49\\x7a\\x75\\x57\\x79\\x45\\x53\\x4e\\x77\\x6a\\x55\\x79\\x64\\x34\\x45\\x6d\\x41\\x71\\x39\\x34\\x79\\x30\\x69\\x4f\\x39\\x69\\x56\\x56\\x71\\x4b\\x33\\x4e\\x64\\x41\\x6b\\x68";
+retsammuc(encodedString69);
+
+//Asianify Execute Code
+var num_69 = "粲改棋主金手タテイラヌフ쵸ㅜㅐㅗㅊ수욣ㅎㄴㅇㄹㅅ在木土竹心中タテイラヌフ쵸ㅜㅐㅗㅊ수木火土弓廿手必竹倔已大卜しおみかえい耇㸃尸火金卜木火土弓廿手ㅂㅈㅂㄴㄴㄱ女土難金水口ㅇㅍㅎ뎌ㅖㅅㅇㅍㅎ뎌ㅖㅅ晩卝笞睾歡去屬主迎少戸尸ㅂㅈㅂㄴㄴㄱㄷ쳐ㅜㄹㄴㄷ晩卝笞睾歡去屬主迎少戸尸難金女日尸手難金女土水口"
+runAsian(num_69);
+                </code></pre>
+            </div>
+        </div>
+        <style>
+            .documentation {
+                padding: 10px;
+                border: 1px solid var(--light-border);
+                border-radius: 8px;
+                background-color: var(--light-background);
+                margin-bottom: 20px;
+                max-height: 500px; /* Adjusted max height for the documentation section */
+                overflow-y: auto;   /* This will add a scrollbar when content overflows the max height */
+                font-size: 0.9em;  /* Decrease the font size to 90% of its current size */
+            }
+
+
+            :root {
+                --light-background: #f4f4f4;
+                --dark-background: #2e2e2e;
+                --light-border: #e0e0e0;
+                --dark-border: #444;
+                --dark-text: #f4f4f4;
+                --dark-secondary: #aaa;
+            }
+        
+            .code-block::before {
+                content: counter(linenumber);
+                counter-increment: linenumber;
+                position: absolute;
+                left: 10px;
+                top: 10px;
+                bottom: 10px;
+                width: 20px;
+                border-right: 1px solid #ccc;
+                padding-right: 5px;
+                text-align: right;
+            }
+            .code-block {
+                counter-reset: linenumber;
+            }
+        
+            .code-comment {
+                color: #888;
+                font-style: italic;
+            }
+        
+            .warning {
+                color: red;
+                font-weight: bold;
+            }
+        
+            .code-box {
+                padding: 20px;
+                background-color: var(--light-background);
+                border-radius: 8px;
+                border: 1px solid var(--light-border);
+                overflow-x: auto;
+            }
+        
+            .code-box code {
+                display: block;
+                white-space: pre;
+            }
+        
+            .documentation {
+                padding: 20px;
+                border: 1px solid var(--light-border);
+                border-radius: 8px;
+                background-color: var(--light-background);
+                margin-bottom: 30px;
+            }
+        
+            body[data-theme='dark'] .documentation {
+                border-color: var(--dark-border);
+                background-color: var(--dark-background);
+            }
+        
+            body[data-theme='dark'] .code-box {
+                background-color: var(--dark-background);
+                border-color: var(--dark-border);
+                color: var(--dark-text);
+            }
+        
+            body[data-theme='dark'] .code-comment {
+                color: var(--dark-secondary);
+            }
+        </style>
+        <script>           
+            function performEncoding() {
+                const input = document.getElementById('inputTextCandify').value;
+                let encoded = encode(input);
+                
+                // Replace single slash with double slashes for each occurrence of \x
+                encoded = encoded.replace(/\\x/g, '\\\\x');
+                
+                document.getElementById('outputTextCandify').value = encoded;
+            }
+
+        
+            function performDecoding() {
+                const input = document.getElementById('inputTextCandify').value;
+                const decoded = decode(input);
+                document.getElementById('outputTextCandify').value = decoded;
+            }
+        
+            function performEncodingAsian() {
+                const input = document.getElementById('inputTextAsian').value;
+                const encoded1 = asiancode(input);
+                document.getElementById('outputTextAsian').value = encoded1;
+            }
+        
+            function performDecodingAsian() {
+                const input = document.getElementById('inputTextAsian').value;
+                const decoded1 = deasiancode(input);
+                document.getElementById('outputTextAsian').value = decoded1;
+            }
+        
+            function toggleTheme() {
+                let currentTheme = document.body.getAttribute("data-theme");
+                let themeButton = document.getElementById('themeToggle');
+                
+                if (currentTheme === "light") {
+                    document.body.setAttribute("data-theme", "dark");
+                    themeButton.textContent = '☀️';
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.body.setAttribute("data-theme", "light");
+                    themeButton.textContent = '🌙';
+                    localStorage.setItem('theme', 'light');
+                }
+            }
+
+            function setInitialTheme() {
+                const savedTheme = localStorage.getItem('theme') || 'dark';
+                document.body.setAttribute("data-theme", savedTheme);
+                const themeButton = document.getElementById('themeToggle');
+                if (savedTheme === "light") {
+                    themeButton.textContent = '🌙';
+                } else {
+                    themeButton.textContent = '☀️';
+                }
+            }
+
+        
+            document.body.setAttribute("data-theme", "dark");
+        
+            function showSection(sectionId) {
+                const sections = document.querySelectorAll('.section');
+                sections.forEach(section => {
+                    if (section.id === sectionId) {
+                        section.classList.add('active');
+                    } else {
+                        section.classList.remove('active');
+                    }
+                });
+            }
+        
+            showSection('candify');
+            setInitialTheme();
+        </script>
+    </body>
+</html>
