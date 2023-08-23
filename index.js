@@ -1,8 +1,8 @@
 let columns;
 let rainDrops = [];
-let isAsian = true;  // Default to Asian characters
-let interval;  // Handle for the interval
-let asianer;  // This is your global variable for character set
+let isAsian = true;
+let interval;
+let asianer;
 
 document.addEventListener('DOMContentLoaded', function() {
     const canvas = document.getElementById('Matrix');
